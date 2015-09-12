@@ -1,0 +1,23 @@
+{
+  "name": "twitter-sentiment",
+  "version": "0.0.1",
+  "description": "Twitter Sentiment analysis to pass to NLP",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ukmadlz/twitter-sentiment.git"
+  },
+  "author": "Mike Elsmore <mike@elsmore.me>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ukmadlz/twitter-sentiment/issues"
+  },
+  "homepage": "https://github.com/ukmadlz/twitter-sentiment#readme",
+  "dependencies": {
+    "hapi": "^10.0.0"
+  }
+}
