@@ -33,17 +33,22 @@ server.route({
       access_token_secret: req.query.authToken
     });
 
-    var twitterHandle = req.query.account;
+    var twitterHandle = req.query.account.toLowerCase();
 
     var params = {
       screen_name: twitterHandle,
       count: 200,
+      include_rts: false,
     };
 
     client.get('statuses/user_timeline', params, function(error, tweets, response){
         if (!error) {
           Cloudant({account:vcapServices.cloudantNoSQLDB[0].credentials.username, password:vcapServices.cloudantNoSQLDB[0].credentials.password}, function(er, cloudant) {
-            cloudant.db.create(twitterHandle, function() {
+            cloudant.db.create(twitterHandle, function(err, body) {
+
+              if(err)
+                console.log(err);
+
               var database = cloudant.db.use(twitterHandle);
 
               database.get('_design/lookups', function(err, body) {
