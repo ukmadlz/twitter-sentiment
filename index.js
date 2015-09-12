@@ -63,7 +63,17 @@ server.route({
               }
 
               // https://f65d7aca-996b-43b6-b273-8d7feb6dbb07-bluemix.cloudant.com/ukmadlz/_design/lookups/_view/timestamps?limit=20&reduce=false&inclusive_end=true&start_key=1440583652000&end_key=1440683652000
-              database.view('lookups', 'timestamps', {start_key: req.query.start_key, end_key: req.query.end_key, inclusive_end: true, include_docs:true}, function(err, body) {
+              var viewParams = {
+                  inclusive_end: true,
+                  include_docs:true
+                };
+
+              if(req.query.start_date)
+                viewParams.start_key = req.query.start_date*1000;
+              if(req.query.end_date)
+                viewParams.end_key = req.query.end_date*1000;
+
+              database.view('lookups', 'timestamps', viewParams, function(err, body) {
                 if (!err) {
                   var tweetText = ''
                   body.rows.forEach(function(doc) {
@@ -99,7 +109,7 @@ server.route({
 
         } else {
           console.log(error);
-          console.log(response.req._header);
+          console.log(response);
           reply('index', { title: 'ERROR' });
         }
       });
