@@ -99,9 +99,14 @@ server.route({
                     url:     'http://battlehack.jakelprice.com/api/nlp',
                     body:    "payload=" + tweetText
                   }, function(error, response, body){
-                    body = JSON.parse(body);
-                    body.frequency = frequency;
-                    reply(body);
+                    if(response.statusCode == 400){
+                      reply({});
+                    } else {
+                      body = JSON.parse(body);
+                      body.frequency = frequency;
+                      body.score = body.value;
+                      reply(body);
+                    }
                   });
 
                 } else {
