@@ -93,6 +93,57 @@ server.route({
 
 server.route({
   method: 'GET',
+  path: '/users',
+  handler: function(req, reply) {
+
+    var twitterHandle = req.query.account.toLowerCase();
+
+    var params = {
+      screen_name: twitterHandle,
+      count: 200,
+      include_rts: false,
+    };
+
+    var tweetArray = [];
+
+    Cloudant({account:vcapServices.cloudantNoSQLDB[0].credentials.username, password:vcapServices.cloudantNoSQLDB[0].credentials.password}, function(er, cloudant) {
+      var database = cloudant.db.use(twitterHandle);
+
+      // https://f65d7aca-996b-43b6-b273-8d7feb6dbb07-bluemix.cloudant.com/ukmadlz/_design/lookups/_view/timestamps?limit=20&reduce=false&inclusive_end=true&start_key=1440583652000&end_key=1440683652000
+      var viewParams = {
+          inclusive_end: true,
+          include_docs:true
+        };
+
+      if(req.query.start_date)
+        viewParams.start_key = req.query.start_date*1000;
+      if(req.query.end_date)
+        viewParams.end_key = req.query.end_date*1000;
+
+      database.view('lookups', 'timestamps', viewParams, function(err, body) {
+        if (!err) {
+
+          var userArray = [];
+          body.rows.forEach(function(doc) {
+            for(var i=0;i<doc.doc.entities.user_mentions.length;i++) {
+                var name = doc.doc.entities.user_mentions[i].screen_name;
+                if(userArray.indexOf(name)<0) userArray.push(name);
+            }
+          });
+
+          reply(userArray);
+
+        } else {
+          console.log(err);
+        }
+      });
+    });
+
+  },
+});
+
+server.route({
+  method: 'GET',
   path: '/new',
   handler: function(req, reply) {
 
