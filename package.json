@@ -6,7 +6,9 @@
   "scripts": {
     "test": "test",
     "start": "node index.js",
-    "start-dev": "nodemon index.js"
+    "start-dev": "nodemon index.js",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -23,6 +25,8 @@
     "dotenv": "^1.2.0",
     "hapi": "^10.0.0",
     "request": "^2.61.0",
-    "twitter": "^1.2.5"
-  }
+    "twitter": "^1.2.5",
+    "snyk": "^1.316.1"
+  },
+  "snyk": true
 }
